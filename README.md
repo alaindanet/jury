@@ -8,5 +8,5 @@ permettra de vérifier la validité de sa composition.
 
 ```r
 library(devtools)
-install_github("adanet/jury", build_vignettes=TRUE)
+install_github("alaindanet/jury", build_vignettes=TRUE)
 ```

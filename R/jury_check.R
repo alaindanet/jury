@@ -23,6 +23,8 @@
 #' @examples
 #' data(jury_example)
 #' jury_check(jury_example)
+#'
+#' @export
 jury_check <- function(data){
 
     ## Check data class
