@@ -1,11 +1,11 @@
 #' Vérifier la validité de la composition de son jury de thèse.
 #' 
-#' @param data un data.frame ou une matrice contenant les variables genre, rang,
+#' @param data un data.frame ou une matrice contenant les variables civilité, rang,
 #' local, hdr, role 
 #'
-#' @details le contenu des variables genre, rang, local, hdr et role est
+#' @details le contenu des variables civilité, rang, local, hdr et role est
 #' insensible à la casse. Cependant, les valeurs que peuvent prendre ces
-#' variables sont strictement contraintes. La variable genre ne peut prendre que
+#' variables sont strictement contraintes. La variable civilité ne peut prendre que
 #' la valeur Mr ou Mme; la variable rang ne peut prendre que les valeurs A ou B
 #' désignant respectivement directeur.es de recherche/professeur.es ou chargé.es
 #' de recherche/maitre.s de conférence; la variable local ne peut prendre que
@@ -26,6 +26,7 @@
 #'
 #' @export
 jury_check <- function(data){
+    require(dplyr)
 
     ## Check data class
     #if(is.null(data)) stop("Veuillez fournir une composition de jury!")
@@ -35,17 +36,14 @@ jury_check <- function(data){
     data <- apply(data, 2, function(x) stringr::str_to_lower(x))
     data <- tibble::as_tibble(data)
 
-    var_needed <- c("genre", "rang", "hdr", "local", "role")
+    var_needed <- c("civilité", "rang", "hdr", "local", "role")
 
     if( any(!(var_needed %in% colnames(data))) ){
-	stop("data doit au moins contenir les variables suivantes: genre, rang, hdr, local, role")}
+	stop("data doit au moins contenir les variables suivantes: civilité, rang, hdr, local, role")}
     
     # check variable
-    if( any(!(data$genre %in% c("mme", "m"))) ) {
-	stop("Le genre fourni ne peut être que Mme ou M (non sensible à la casse).
-	    Désolé de ne pas prendre pas en compte les LGBT+. Pour toute
-	    réclamation à ce propos, veuillez contacter votre école doctorale ou
-	    université.")}
+    if( any(!(data$civilité %in% c("mme", "m"))) ) {
+	stop("La civilité fournie ne peut être que Mme ou M (non sensible à la casse).")}
 
     if( any(!(data$rang %in% c("a", "b"))) ) {
 	stop("Le rang fourni ne peut être que A ou B (non sensible à la casse)")}
@@ -86,6 +84,18 @@ jury_check <- function(data){
     ## Directeur et HDR
     if( any(data$role == "directeur" & data$hdr != "oui") ) {
 	stop("Les directeurs doivent obligatoirement posséder l'HDR")}
+
+    ## Parité 
+    genre_ratio <- length(which(data$civilité == "mme"))/nrow(data) %>% round(., 1)
+    if( genre_ratio != 1/2 ) {
+	warning("La composition du jury doit assurer une représentation équilibrée de femmes et d'hommes.\n",
+	    "La composition que vous avez proposé sous-représente les ",
+	    ifelse(genre_ratio < 1/2, "femmes", "hommes"),"." )}
+
+    ## Tout a l'air parfait!
+    cat("La composition de jury de thèse que vous avez proposé semble valide.", 
+	"Il est néanmoins nécessaire d'obtenir confirmation auprès de votre école doctorale.", 
+	sep = "\n")
 
 }
 

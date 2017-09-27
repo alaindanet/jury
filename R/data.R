@@ -7,7 +7,7 @@
 #'
 #' @format A tibble avec 6 lignes and 5 variables:
 #' \describe{
-#'   \item{genre}{civilité, monsieur ou madame}
+#'   \item{civilité}{civilité, monsieur ou madame}
 #'   \item{rang}{A ou B, désignant respectivement directeur.es de
 #'   recherche/professeur.es ou chargé.es de recherche/maitre.s de conférence}
 #'   \item{hdr}{diplôme d'habilitation à diriger les recherches, oui, non, ou

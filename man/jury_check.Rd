@@ -7,7 +7,7 @@
 jury_check(data)
 }
 \arguments{
-\item{data}{un data.frame ou une matrice contenant les variables genre, rang,
+\item{data}{un data.frame ou une matrice contenant les variables civilité, rang,
 local, hdr, role}
 }
 \value{
@@ -18,9 +18,9 @@ composition du jury de thèse n'est pas valide.
 Vérifier la validité de la composition de son jury de thèse.
 }
 \details{
-le contenu des variables genre, rang, local, hdr et role est
+le contenu des variables civilité, rang, local, hdr et role est
 insensible à la casse. Cependant, les valeurs que peuvent prendre ces
-variables sont strictement contraintes. La variable genre ne peut prendre que
+variables sont strictement contraintes. La variable civilité ne peut prendre que
 la valeur Mr ou Mme; la variable rang ne peut prendre que les valeurs A ou B
 désignant respectivement directeur.es de recherche/professeur.es ou chargé.es
 de recherche/maitre.s de conférence; la variable local ne peut prendre que
@@ -34,4 +34,5 @@ Directeur, Encadrant, Examinateur et Rapporteur.
 \examples{
 data(jury_example)
 jury_check(jury_example)
+
 }

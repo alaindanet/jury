@@ -4,20 +4,20 @@ library(dplyr)
 context("Tester la composition du jury")
 
 # Jury data
-genre <- c("M", "Mme", "M", "M", "Mme", "M")
+civilité <- c("M", "Mme", "M", "M", "Mme", "M")
 rang <- c("A", "A", "B", "B", "A", "B")
 hdr <- c("Oui", "Oui", "Équivalent", "Non", "Oui", "Non")
 local <- c("Extérieur", "Local", "Extérieur", "Extérieur", "Local", "Local")
 role <- c("Rapporteur", "Examinateur", "Rapporteur", "Examinateur", "Directeur", "Encadrant")
 
 ## Good jury
-jury_example <- tibble::as_tibble(cbind(genre, rang, hdr, local, role))
+jury_example <- tibble::as_tibble(cbind(civilité, rang, hdr, local, role))
 
 ## Bad input
-jury_bad_input <- dplyr::rename(jury_example, civilite = genre)
+jury_bad_input <- dplyr::rename(jury_example, civilite = civilité)
 jury_bad_input2 <- dplyr::mutate(jury_example, nom = NA) %>%
-    dplyr::rename(civilite = genre)
-jury_bad_genre <- dplyr::mutate(jury_example, genre = c("Mr", "Mme", "M", "NA", "Mrs", "M"))
+    dplyr::rename(civilite = civilité)
+jury_bad_civilité <- dplyr::mutate(jury_example, civilité = c("Mr", "Mme", "M", "NA", "Mrs", "M"))
 jury_bad_rang <- dplyr::mutate(jury_example, rang = c("C", "NA", "B", "A", "B", "D"))
 jury_bad_hdr <- dplyr::mutate(jury_example, 
     hdr = c("Oui", "NA", "Equivalent", "Non", " ", "Non"))
@@ -29,11 +29,11 @@ jury_bad_role <- dplyr::mutate(jury_example,
 test_that("Data format check", {
     expect_error(jury_check()) #, "Veuillez fournir une composition de jury!"
     expect_error(jury_check(jury_bad_input), 
-	"data doit au moins contenir les variables suivantes: genre, rang, hdr, local, role")
+	"data doit au moins contenir les variables suivantes: civilité, rang, hdr, local, role")
     expect_error(jury_check(jury_bad_input2), 
-	"data doit au moins contenir les variables suivantes: genre, rang, hdr, local, role")
-    expect_error(jury_check(jury_bad_genre),
-	"Le genre fourni ne peut être que Mme ou M")
+	"data doit au moins contenir les variables suivantes: civilité, rang, hdr, local, role")
+    expect_error(jury_check(jury_bad_civilité),
+	"La civilité fournie ne peut être que Mme ou M")
     expect_error(jury_check(jury_bad_rang),
 	"Le rang fourni ne peut être que A ou B")
     expect_error(jury_check(jury_bad_hdr),
@@ -76,4 +76,7 @@ test_that("Jury composition check", {
 	"Les rapporteurs doivent obligatoirement posséder l'HDR ou l'équivalence")
     expect_error(jury_check(jury_bad_hdr_dir),
 	"Les directeurs doivent obligatoirement posséder l'HDR")
+    expect_warning(jury_check(jury_example),
+	"La composition du jury doit assurer une représentation équilibrée de femmes et d'hommes.")
+
 })
