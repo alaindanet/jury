@@ -26,9 +26,9 @@ jury_check(jury_example)
 
 ## Combinaison de jury de thèse
 
-En fournissant une liste de personne que vous souhaiteriez inviter dans votre
+En fournissant une liste de personnes que vous souhaiteriez inviter dans votre
 jury de thèse, la fonction `jury_check_all` vous retournera l'ensemble des
-combinaison de jury de thèse valide.
+combinaisons de jury de thèse valides.
 
 
 ```r
