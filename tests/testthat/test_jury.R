@@ -4,7 +4,7 @@ library(dplyr)
 context("Tester la composition du jury")
 
 # Jury data
-civilité <- c("M", "Mme", "M", "M", "Mme", "M")
+civilité <- c("Mme", "Mme", "M", "M", "Mme", "M")
 rang <- c("A", "A", "B", "B", "A", "B")
 hdr <- c("Oui", "Oui", "Équivalent", "Non", "Oui", "Non")
 local <- c("Extérieur", "Local", "Extérieur", "Extérieur", "Local", "Local")
@@ -58,6 +58,8 @@ jury_bad_hdr_rap <- dplyr::mutate(jury_example,
     hdr = c("Non", "Non", "Équivalent", "Non", "Oui", "Non"))
 jury_bad_hdr_dir <- dplyr::mutate(jury_example, 
     hdr = c("Oui", "Non", "Équivalent", "Non", "Non", "Non"))
+jury_bad_parite <- dplyr::mutate(jury_example, 
+    civilité = c("Mme", "M", "M", "M", "Mme", "M"))
 
 test_that("Jury composition check", {
     expect_error(jury_check(jury_bad_nb),
@@ -76,7 +78,29 @@ test_that("Jury composition check", {
 	"Les rapporteurs doivent obligatoirement posséder l'HDR ou l'équivalence")
     expect_error(jury_check(jury_bad_hdr_dir),
 	"Les directeurs doivent obligatoirement posséder l'HDR")
-    expect_warning(jury_check(jury_example),
+    expect_warning(jury_check(jury_bad_parite),
 	"La composition du jury doit assurer une représentation équilibrée de femmes et d'hommes.")
+    expect_message(jury_check(jury_example),
+	"La composition de jury de thèse que vous avez proposé semble valide.")
 
+})
+
+# Jury data file 
+nom <- c("Smith", "Dupond", "Schulz", "Kergall")
+prénom <- c("Camille", "Dominik", "Claude")
+people <- tidyr::crossing(nom, prénom)
+people_suggestion <- rbind(jury_example, jury_example)
+people_suggestion %<>% cbind(people, .) %>%
+    slice(1:8)
+
+# Results
+valid_combination <- jury_check_all(people_suggestion, n = 6)
+
+test_that("People suggestion check", {
+    expect_error(jury_check_all(people_suggestion, n = 3),
+	"n ne peut que prendre les valeurs 5 et 6.")
+    expect_error(jury_check_all(people_suggestion, n = 7),
+	"n ne peut que prendre les valeurs 5 et 6.")
+    expect_output(str(valid_combination),
+	"List of 2")
 })
