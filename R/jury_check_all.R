@@ -27,18 +27,23 @@
 #'
 #' @export
 
+#' @importFrom magrittr "%>%"
+#' @importFrom magrittr "%<>%"
+
 jury_check_all <- function(data, n = NULL){
 
-    require(magrittr) #needed to use pipe
-
-    if(is.null(n)){n <- 5}
+    if(is.null(n)){
+	n <- 5
+    }
     data %<>% jury_validity()
 
     # n doit être supérieur à 5 et être au maximum égal à 6
-    if(!(n %in% c(5, 6))){stop("n ne peut que prendre les valeurs 5 et 6.")}
-    
+    if(!(n %in% c(5, 6))){
+	stop("n ne peut que prendre les valeurs 5 et 6.")
+    }
+
     # List of all possible combinations
-    possible <- combn(1:nrow(data), n, 
+    possible <- combn(1:nrow(data), n,
 	FUN = function(x) dplyr::slice(data, x),
 	simplify = FALSE)
 

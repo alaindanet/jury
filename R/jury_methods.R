@@ -4,7 +4,7 @@
 
 #' @export
 
-print.jury_list <- function(result, ...) {
+summary.jury_list <- function(result, ...) {
 
     percent <- length(result$result)/result$nbcombination*100
     percent %<>% round(.)
