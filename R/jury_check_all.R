@@ -50,10 +50,20 @@ jury_check_all <- function(data, n = NULL){
     valide <- lapply(possible, jury_check, binary = TRUE)
     result <- possible[which(valide == TRUE)]
 
-    result %<>% list(result = ., nbcombination = length(valide))
+    if ("préférence" %in% names(data)) {
+
+	compute_score <- function(x) sum(as.numeric(x$préférence))
+	score <- sapply(result, compute_score, simplify = TRUE)
+
+	# Order result by score
+	result <- result[order(score, decreasing = TRUE)]
+	score <- score[order(score, decreasing = TRUE)]
+    }
+
+    result %<>% list(result = ., nbcombination = length(valide), score = score)
 
 
     class(result) <- "jury_list"
-    result
+    return(result)
 
 }

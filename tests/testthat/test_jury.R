@@ -92,6 +92,7 @@ people <- tidyr::crossing(nom, prénom)
 people_suggestion <- rbind(jury_example, jury_example)
 people_suggestion %<>% cbind(people, .) %>%
     slice(1:8)
+people_suggestion %<>% mutate(., préférence = seq(1,8))
 
 # Results
 valid_combination <- jury_check_all(people_suggestion, n = 6)
@@ -102,5 +103,5 @@ test_that("People suggestion check", {
     expect_error(jury_check_all(people_suggestion, n = 7),
 	"n ne peut que prendre les valeurs 5 et 6.")
     expect_output(str(valid_combination),
-	"List of 2")
+	"List of 3")
 })
