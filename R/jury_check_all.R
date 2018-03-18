@@ -58,9 +58,10 @@ jury_check_all <- function(data, n = NULL){
 	# Order result by score
 	result <- result[order(score, decreasing = TRUE)]
 	score <- score[order(score, decreasing = TRUE)]
+	result %<>% list(result = ., nbcombination = length(valide), score = score)
     }
 
-    result %<>% list(result = ., nbcombination = length(valide), score = score)
+    result %<>% list(result = ., nbcombination = length(valide))
 
 
     class(result) <- "jury_list"

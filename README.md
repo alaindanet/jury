@@ -21,6 +21,7 @@ install_github("alaindanet/jury", build_vignettes=TRUE)
 ```r
 library(jury)
 data(jury_example)
+str(jury_example)
 jury_check(jury_example)
 ```
 
@@ -34,5 +35,15 @@ combinaisons de jury de thèse valides.
 ```r
 library(jury)
 data(people_suggestion)
-jury_check_all(people_suggestion)
+str(people_suggestion)
+valid_jury <- jury_check_all(people_suggestion)
+```
+
+On peut consulter la liste des compositions de jury compatibles. Ces
+compositions sont affichées par ordre décroissant de la somme des notes de
+préférences des membres de jury. On peut contrôler le nombre de composition à
+afficher avec l'argument `r n`.
+
+```r
+print(valid_jury, n = 3)
 ```
