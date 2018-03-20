@@ -42,7 +42,7 @@ valid_jury <- jury_check_all(people_suggestion)
 On peut consulter la liste des compositions de jury compatibles. Ces
 compositions sont affichées par ordre décroissant de la somme des notes de
 préférences des membres de jury. On peut contrôler le nombre de composition à
-afficher avec l'argument `r n`.
+afficher avec l'argument `n`.
 
 ```r
 print(valid_jury, n = 3)
