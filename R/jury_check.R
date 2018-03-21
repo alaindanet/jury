@@ -145,9 +145,8 @@ jury_check <- function(data, binary = FALSE){
 	    ifelse(genre_ratio < 1/2, "femmes", "hommes"),"." )}
 
     ## Tout a l'air parfait!
-   mymessage("La composition de jury de thèse que vous avez proposé semble valide.", 
-	"Il est néanmoins nécessaire d'obtenir confirmation auprès de votre école doctorale.", 
-	sep = "\n")
+   mymessage("La composition de jury de thèse que vous avez proposé semble valide.\n",
+	"Il est néanmoins nécessaire d'obtenir confirmation auprès de votre école doctorale.")
 
    if(binary == TRUE){
        if(result == FALSE){ return(FALSE)}else{return(TRUE)}

@@ -1,0 +1,99 @@
+---
+title: "Utiliser jury"
+author: "Alain Danet"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Utiliser jury}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Le but du package `jury` est de fournir un moyen pratique de vérifier si la
+composition de son jury de thèse est conforme aux règles étiquetées par
+l'Université de Montpellier (et à fortiori, elle doivent être les même pour les
+autres universités). Les règles de composition des jurys de thèse pour la
+délivrance d'un diplôme national de doctorat sont basées sur un
+ [arrêté du 25 mai 2016](https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000032587086).
+
+En plus de pouvoir vérifier la composition d'un jury de thèse (`jury_check()`), `jury` peut
+également retourner la liste des combinaisons de jury de thèse valide et les
+classer par ordre de préférence (`jury_check_all()`) à partir d'une liste
+de personnes susceptibles de faire partie de votre jury de thèse.
+
+## Format du jeu de données
+
+Pour générer une composition de jury, on peut créer un objet de classe `tibble` ou
+`data.frame` comme le jeu de données donné comme exemple. Pour voir le détail
+des différentes catégories, on peut se référer à l'aide de la fonction
+`?jury_check()` 
+
+```{r}
+library(jury)
+data(jury_example)
+str(jury_example)
+```
+
+## Vérifier une composition de jury
+
+On peut vérifier la composition de son jury de thèse avec la fonction
+`jury_check()` qui renvoie un message indiquant si la composition semble valide
+ou non.
+
+### Exemple valide
+
+```{r}
+jury_check(jury_example)
+
+```
+
+### Exemple non valide
+
+Si on modifie la composition de jury de manière à la rendre non conforme, la
+fonction le signalera par une erreur.
+
+```{r, error = TRUE}
+## Mettons moins de personnes extérieures que requis   
+jury_bad_nb_loc <- dplyr::mutate(jury_example, 
+    local = c("Local", "Local", "Extérieur", "Extérieur", "Local", "Local"))
+str(jury_bad_nb_loc)
+jury_check(jury_bad_nb_loc)
+
+##... Ou un rapporteur sans HDR
+jury_bad_hdr_rap <- dplyr::mutate(jury_example, 
+    hdr = c("Non", "Non", "Équivalent", "Non", "Oui", "Non"))
+str(jury_bad_hdr_rap)
+jury_check(jury_bad_hdr_rap)
+```
+
+## Construire une liste de jury valide
+
+On peut également fournir une liste de personnes que l'on voudrait
+potentiellement dans son jury et la laisser `jury_check_all()` renvoyer les
+combinaisons des personnes constituant un jury de thèse valide. On peut
+également spécifier une colonne `préférence` où l'on peut mettre un score à
+chacun des personnes. Les compositions de jury de thèse valides seront ensuite
+affichées par ordre de la somme des préférences des personnes qui la compose.      
+
+```{r}
+data(people_suggestion)
+str(people_suggestion)
+```
+
+```{r}
+valid_jury <- jury_check_all(people_suggestion, n = 5) 
+summary(valid_jury)
+```
+
+On peut ensuite afficher les combinaisons de jury valides.
+
+```{r}
+# Les trois premiers 
+print(valid_jury, n = 3)
+
+# Les cinq premiers
+print(valid_jury, n = 5)
+```
+
+
+

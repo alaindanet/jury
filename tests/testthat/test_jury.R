@@ -85,23 +85,19 @@ test_that("Jury composition check", {
 
 })
 
-# Jury data file 
-nom <- c("Smith", "Dupond", "Schulz", "Kergall")
-prénom <- c("Camille", "Dominik", "Claude")
-people <- tidyr::crossing(nom, prénom)
-people_suggestion <- rbind(jury_example, jury_example)
-people_suggestion %<>% cbind(people, .) %>%
-    slice(1:8)
-people_suggestion %<>% mutate(., préférence = seq(1,8))
-
-# Results
-valid_combination <- jury_check_all(people_suggestion, n = 6)
 
 test_that("People suggestion check", {
+
+    data(people_suggestion)
+    valid_jury <- jury_check_all(people_suggestion)
+
     expect_error(jury_check_all(people_suggestion, n = 3),
 	"n ne peut que prendre les valeurs 5 et 6.")
     expect_error(jury_check_all(people_suggestion, n = 7),
 	"n ne peut que prendre les valeurs 5 et 6.")
-    expect_output(str(valid_combination),
+    expect_output(str(valid_jury),
 	"List of 3")
+    expect_equal(length(valid_jury$result),
+	14)
+
 })
