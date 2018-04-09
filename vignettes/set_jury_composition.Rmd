@@ -23,7 +23,7 @@ de personnes susceptibles de faire partie de votre jury de thèse.
 
 ## Format du jeu de données
 
-Pour générer une composition de jury, on peut créer un objet de classe `tibble` ou
+Pour générer une composition de jury, on peut créer un objet de classe [`tibble`](http://tibble.tidyverse.org/) ou
 `data.frame` comme le jeu de données donné comme exemple. Pour voir le détail
 des différentes catégories, on peut se référer à l'aide de la fonction
 `?jury_check()` 
@@ -31,7 +31,14 @@ des différentes catégories, on peut se référer à l'aide de la fonction
 ```{r}
 library(jury)
 data(jury_example)
+
+# A tibble
 str(jury_example)
+jury_example
+
+# Or a dataframe
+str(as.data.frame(jury_example))
+
 ```
 
 ## Vérifier une composition de jury
@@ -78,6 +85,7 @@ affichées par ordre de la somme des préférences des personnes qui la compose.
 ```{r}
 data(people_suggestion)
 str(people_suggestion)
+people_suggestion
 ```
 
 ```{r}

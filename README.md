@@ -16,6 +16,13 @@ install_github("alaindanet/jury", build_vignettes=TRUE)
 
 # Usage
 
+## Consulter la vignette
+
+```r
+browseVignettes("jury")
+```
+
+
 ## Vérifier la composition de son jury de thèse
 
 ```r
