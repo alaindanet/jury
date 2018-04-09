@@ -22,13 +22,21 @@ print(test2)
 
 df <- valid_jury$result %>% purrr::reduce(bind_rows)
 
-library(tibble)
-tibble()
-tibble(x = 1:5, y = 1, z = x ^ 2 + y)
-packageVersion("tibble")
-devtools::install_version("tibble", version = "1.3.3", repos = "http://cran.us.r-project.org")
-version
+result <- with(test <- alert_functions(TRUE), {
+  res <- c(
+    check_nb_exam(jury_bad_nb, mystop),
+    check_nb_reviewer(jury_bad_nb, mystop),
+    check_nb_row(jury_bad_nb, mystop)
+    )
 
+res
+})
+result
+
+
+jury_check(jury_bad_nb, binary = TRUE)
+test <- c(T,T,T,T)
+any(test == FALSE)
 
 ##########################
 #  Build a new vignette  #

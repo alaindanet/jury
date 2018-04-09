@@ -85,72 +85,36 @@ jury_validity <- function(data){
 #' jury_check(jury_example)
 #'
 #' @export
-jury_check <- function(data, binary = FALSE){
+jury_check <- function(data, binary = FALSE, gender_biais = FALSE){
 
-    
+  require(magrittr) #needed to use pipe
+  data %<>% jury_validity()
 
-    require(magrittr) #needed to use pipe
-    data %<>% jury_validity()
-
-    # Check validité du jury
-
-
-    if(binary == FALSE){
-	mystop <- stop
-	mymessage <- message 
-	mywarning <- warning
-    }else{
-	mystop <- function(x, ...) {
-	    return(FALSE)
-	}
-	mymessage <- function(x,...) {
-	    return(TRUE)
-	} 
-	mywarning <- function(x,...) {
-	}
-	result <- TRUE # Par défaut le jury est bon
-
-    }
-
+  custom_function <- alert_functions(binary, gender_biais)
+  #TODO: check that jury check all works well  
+result <- with(custom_function, {
     ## Nombre de rapporteur, d'examinateur et directeur de thèse 
-    if(nrow(data) < 5) {
-	result <- mystop("Le jury doit être composé de cinq membres au minimum: deux rapporteurs, deux
-	    examinateurs et un directeur de thèse")}
-    if(nrow(data) > 6) {
-	result <- mystop("Le jury doit être composé de six membres au maximum si on exclue les invités.")}
-    ## Nombre de rapporteurs
-    if( dplyr::filter(data, role == "rapporteur") %>% dplyr::summarise(n()) %>% unlist < 2 ) {
-	result <- mystop("Le jury doit être composé de deux rapporteurs au minimum")}
-    ## Nombre d'examinateurs
-    if( dplyr::filter(data, role == "examinateur") %>% dplyr::summarise(n()) %>% unlist < 2 ) {
-	result <- mystop("Le jury doit être composé de deux examinateurs au minimum")}
-    ## Nombre de rang A
-    if( length(which(data$rang == "a"))/nrow(data) < 1/2 ) {
-	result <- mystop("La moitié des membres jury au minimum doit être de rang A")}
-    ## Localité
-    if( length(which(data$local == "extérieur"))/nrow(data) < 1/2 ) {
-	result <- mystop("La moitié des membres jury au minimum doit être rattaché à une école doctorale extérieure")}
-    ## Rapporteur et HDR
-    if( any(data$role == "rapporteur" & !(data$hdr %in% c("oui", "équivalent")) ) ) {
-	result <- mystop("Les rapporteurs doivent obligatoirement posséder l'HDR ou l'équivalence")}
-    ## Directeur et HDR
-    if( any(data$role == "directeur" & data$hdr != "oui") ) {
-	result <- mystop("Les directeurs doivent obligatoirement posséder l'HDR")}
-
-    ## Parité 
-    genre_ratio <- length(which(data$civilité == "mme"))/nrow(data) %>% round(., 1)
-    if( genre_ratio != 1/2 ) {
-	mywarning("La composition du jury doit assurer une représentation équilibrée de femmes et d'hommes.\n",
-	    "La composition que vous avez proposé sous-représente les ",
-	    ifelse(genre_ratio < 1/2, "femmes", "hommes"),"." )}
-
+    res <- c(check_nb_row(data, mystop),
+      check_nb_reviewer(data, mystop),
+      check_nb_exam(data, mystop),
+      check_rank(data, mystop),
+      check_dom(data, mystop),
+      check_hdr_reviewer(data, mystop),
+      check_supervisor(data, mystop),
+      check_gender_bias(data, mywarning)
+      )
     ## Tout a l'air parfait!
-   mymessage("La composition de jury de thèse que vous avez proposé semble valide.\n",
-	"Il est néanmoins nécessaire d'obtenir confirmation auprès de votre école doctorale.")
+    mymessage("La composition de jury de thèse que vous avez proposé semble valide.\n",
+      "Il est néanmoins nécessaire d'obtenir confirmation auprès de votre école doctorale.")
+    res
+    })
 
-   if(binary == TRUE){
-       if(result == FALSE){ return(FALSE)}else{return(TRUE)}
-   }
-
+  if(binary == TRUE){
+    if(any(result == FALSE)){ 
+      return(FALSE)
+    } else {
+      return(TRUE)
     }
+  }
 
+}

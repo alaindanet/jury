@@ -2,8 +2,9 @@
 #  Methods to handle jury objects  #
 ####################################
 
+#' Summuary of valid jury combination
+#'
 #' @export
-
 summary.jury_list <- function(result, ...) {
 
     percent <- length(result$result) / result$nbcombination * 100
@@ -12,6 +13,9 @@ summary.jury_list <- function(result, ...) {
     cat(percent, "% des combinaisons des membres de jury sont valides. \n")
 }
 
+#' Print Jury
+#'
+#' @export
 print.jury_list <- function(jurylist, n = 3) {
     top <- jurylist$result[1:n]
 
@@ -20,7 +24,7 @@ print.jury_list <- function(jurylist, n = 3) {
 	cat("Numéro", i, ": \n")
 	cat("--------")
 	cat("\n")
-	print(top[[1]])
+	print(as.data.frame(top[[1]]), na.print = "", quote = FALSE)
 	cat("\n")
 	cat("\n")
 

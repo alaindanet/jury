@@ -58,33 +58,49 @@ jury_bad_hdr_rap <- dplyr::mutate(jury_example,
     hdr = c("Non", "Non", "Équivalent", "Non", "Oui", "Non"))
 jury_bad_hdr_dir <- dplyr::mutate(jury_example, 
     hdr = c("Oui", "Non", "Équivalent", "Non", "Non", "Non"))
+jury_bad_dir <- dplyr::mutate(jury_example, 
+    role = c("Rapporteur", "Examinateur", "Rapporteur", "Examinateur", "Examinateur", "Encadrant"))
 jury_bad_parite <- dplyr::mutate(jury_example, 
     civilité = c("Mme", "M", "M", "M", "Mme", "M"))
 
-test_that("Jury composition check", {
-    expect_error(jury_check(jury_bad_nb),
-	"Le jury doit être composé de cinq membres au minimum")
-    expect_error(jury_check(jury_bad_nb_sup),
-	"Le jury doit être composé de six membres au maximum")
-    expect_error(jury_check(jury_bad_nb_rank),
-	"La moitié des membres jury au minimum doit être de rang A")
-    expect_error(jury_check(jury_bad_nb_loc),
-	"La moitié des membres jury au minimum doit être rattaché à une école doctorale extérieure")
-    expect_error(jury_check(jury_bad_nb_rap),
-	"Le jury doit être composé de deux rapporteurs")
-    expect_error(jury_check(jury_bad_nb_exa),
-	"Le jury doit être composé de deux examinateurs")
-    expect_error(jury_check(jury_bad_hdr_rap), 
-	"Les rapporteurs doivent obligatoirement posséder l'HDR ou l'équivalence")
-    expect_error(jury_check(jury_bad_hdr_dir),
-	"Les directeurs doivent obligatoirement posséder l'HDR")
-    expect_warning(jury_check(jury_bad_parite),
-	"La composition du jury doit assurer une représentation équilibrée de femmes et d'hommes.")
-    expect_message(jury_check(jury_example),
-	"La composition de jury de thèse que vous avez proposé semble valide.")
-
+test_that("Jury composition check works", {
+  expect_error(jury_check(jury_bad_nb),
+    "Le jury doit être composé de cinq membres au minimum")
+  expect_error(jury_check(jury_bad_nb_sup),
+    "Le jury doit être composé de cinq membres au minimum")
+  expect_error(jury_check(jury_bad_nb_rank),
+    "La moitié des membres jury au minimum doit être de rang A")
+  expect_error(jury_check(jury_bad_nb_loc),
+    "La moitié des membres jury au minimum doit être rattaché à une école doctorale extérieure")
+  expect_error(jury_check(jury_bad_nb_rap),
+    "Le jury doit être composé de deux rapporteurs")
+  expect_error(jury_check(jury_bad_nb_exa),
+    "Le jury doit être composé de deux examinateurs")
+  expect_error(jury_check(jury_bad_hdr_rap), 
+    "Les rapporteurs doivent obligatoirement posséder l'HDR ou l'équivalence")
+  expect_error(jury_check(jury_bad_hdr_dir),
+    "Les directeurs doivent obligatoirement posséder l'HDR")
+  expect_error(jury_check(jury_bad_dir),
+    "Le jury doit avoir un directeur de thèse.")
+  expect_warning(jury_check(jury_bad_parite),
+    "La composition du jury doit assurer une représentation équilibrée de femmes et d'hommes.")
+  expect_message(jury_check(jury_example),
+    "La composition de jury de thèse que vous avez proposé semble valide.")
 })
 
+test_that("Jury composition check works when binary", {
+  expect_false(jury_check(jury_bad_nb, binary = TRUE))
+  expect_false(jury_check(jury_bad_nb_sup, binary = TRUE))
+  expect_false(jury_check(jury_bad_nb_rank, binary = TRUE))
+  expect_false(jury_check(jury_bad_nb_loc, binary = TRUE))
+  expect_false(jury_check(jury_bad_nb_rap, binary = TRUE))
+  expect_false(jury_check(jury_bad_nb_exa, binary = TRUE))
+  expect_false(jury_check(jury_bad_hdr_rap, binary = TRUE))
+  expect_false(jury_check(jury_bad_hdr_dir, binary = TRUE))
+  expect_false(jury_check(jury_bad_dir, binary = TRUE))
+  expect_false(jury_check(jury_bad_parite, binary = TRUE, gender_biais = TRUE))
+  expect_true(jury_check(jury_example, binary = TRUE))
+})
 
 test_that("People suggestion check", {
 
@@ -98,6 +114,5 @@ test_that("People suggestion check", {
     expect_output(str(valid_jury),
 	"List of 3")
     expect_equal(length(valid_jury$result),
-	14)
-
+	6)
 })
