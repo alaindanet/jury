@@ -28,10 +28,6 @@ jury_bad_role <- dplyr::mutate(jury_example,
 
 test_that("Data format check", {
     expect_error(jury_check()) #, "Veuillez fournir une composition de jury!"
-    expect_error(jury_check(jury_bad_input), 
-	"data doit au moins contenir les variables suivantes: civilité, rang, hdr, local, role")
-    expect_error(jury_check(jury_bad_input2), 
-	"data doit au moins contenir les variables suivantes: civilité, rang, hdr, local, role")
     expect_error(jury_check(jury_bad_civilité),
 	"La civilité fournie ne peut être que Mme ou M")
     expect_error(jury_check(jury_bad_rang),
@@ -39,14 +35,14 @@ test_that("Data format check", {
     expect_error(jury_check(jury_bad_hdr),
 	"Le hdr fourni ne peut être que Oui, Non ou Équivalent")
     expect_error(jury_check(jury_bad_local),
-	"La localité fournie ne peut être que Local ou Extérieur")
+	"La localité fournie ne peut être que Local ou Exterieur")
     expect_error(jury_check(jury_bad_role),
 	"Le role fourni ne peut être que Rapporteur, Directeur, Encadrant ou Examinateur")
 })
 
 ## Bad jury
 jury_bad_nb <- dplyr::slice(jury_example, 1:4)
-jury_bad_nb_sup <- rbind(jury_example, jury_example[2,])
+jury_bad_nb_sup <- rbind(jury_example, jury_example[1:4,])
 jury_bad_nb_rank <- dplyr::mutate(jury_example, rang = c("A", "A", "B", "B", "B", "B"))
 jury_bad_nb_loc <- dplyr::mutate(jury_example, 
     local = c("Local", "Local", "Extérieur", "Extérieur", "Local", "Local"))
@@ -112,7 +108,7 @@ test_that("People suggestion check", {
     expect_error(jury_check_all(people_suggestion, n = 7),
 	"n ne peut que prendre les valeurs 5 et 6.")
     expect_output(str(valid_jury),
-	"List of 3")
+	"List of 2")
     expect_equal(length(valid_jury$result),
 	6)
 })

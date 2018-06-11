@@ -4,7 +4,7 @@
 \alias{alert_functions}
 \title{Définition de la sortie des fonctions en cas d'erreurs}
 \usage{
-alert_functions(binary = FALSE)
+alert_functions(binary = FALSE, gender_biais = FALSE)
 }
 \arguments{
 \item{binary}{logical. Define if the functions should return TRUE/FALSE or a

@@ -4,7 +4,7 @@
 \alias{check_supervisor}
 \title{Fonctions de vérification}
 \usage{
-check_supervisor(data)
+check_supervisor(data, f)
 }
 \arguments{
 \item{data}{}

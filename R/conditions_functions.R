@@ -16,10 +16,10 @@ check_supervisor <- function(data, f) {
 }
 check_nb_row <- function(data, f) {
   result <- TRUE
-  if(nrow(data) < 5 | nrow(data) > 6) {
+  if(nrow(data) < 5 | nrow(data) > 8) {
     result <- f("Le jury doit être composé de cinq membres au minimum: deux
       rapporteurs, deux examinateurs et un directeur de thèse. Le jury doit être
-      composé de six membres au maximum si on exclue les invités.") 
+      composé de huit membres au maximum si on exclue les invités.") 
   }
   return(result)
 }
@@ -46,21 +46,21 @@ check_rank <- function(data, f) {
 }
 check_dom <- function(data, f) {
   result <- TRUE
-  if( length(which(data$local == "extérieur"))/nrow(data) < 1/2 ) {
+  if( length(which(data$local == "exterieur"))/nrow(data) < 1/2 ) {
     result <- f("La moitié des membres jury au minimum doit être rattaché à une école doctorale extérieure")
   }
   return(result)
 }
 check_hdr_reviewer <- function(data, f) {
   result <- TRUE
-  if( any(data$role == "rapporteur" & !(data$hdr %in% c("oui", "équivalent")) ) ) {
+  if( any(data$role == "rapporteur" & !(data$hdr %in% c("oui", "equivalent")) ) ) {
     result <- f("Les rapporteurs doivent obligatoirement posséder l'HDR ou l'équivalence")
   }
   return(result)
 }
 check_gender_bias <- function(data, f) {
   result <- TRUE
-  genre_ratio <- length(which(data$civilité == "mme"))/nrow(data) %>% round(., 1)
+  genre_ratio <- length(which(data$civilite == "mme"))/nrow(data) %>% round(., 1)
   if( genre_ratio != 1/2 ) {
     result <- f("La composition du jury doit assurer une représentation équilibrée de femmes et d'hommes.\n", 
       "La composition que vous avez proposé sous-représente les ",

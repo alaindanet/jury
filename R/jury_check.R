@@ -28,27 +28,31 @@ jury_validity <- function(data){
     #if(is.null(data)) stop("Veuillez fournir une composition de jury!")
     stopifnot(any(class(data) %in% c("matrix","list", "data.frame")))
 
-    colnames(data)  <- stringr::str_to_lower(colnames(data))
-    data <- apply(data, 2, function(x) stringr::str_to_lower(x))
+    colnames(data)  <- stringr::str_to_lower(colnames(data)) %>%
+      stringi::stri_trans_general(., "Latin-ASCII")
+    data <- apply(data, 2, function(x) 
+      stringr::str_to_lower(x) %>%
+      stringi::stri_trans_general(., "Latin-ASCII")
+    )
     data <- tibble::as_tibble(data)
 
-    var_needed <- c("civilité", "rang", "hdr", "local", "role")
+    var_needed <- c("civilite", "rang", "hdr", "local", "role")
 
     if( any(!(var_needed %in% colnames(data))) ){
-	stop("data doit au moins contenir les variables suivantes: civilité, rang, hdr, local, role")}
+	stop("data doit au moins contenir les variables suivantes: civilite, rang, hdr, local, role")}
 
     # check variable
-    if( any(!(data$civilité %in% c("mme", "m"))) ) {
+    if( any(!(data$civilite %in% c("mme", "m"))) ) {
 	stop("La civilité fournie ne peut être que Mme ou M (non sensible à la casse).")}
 
     if( any(!(data$rang %in% c("a", "b"))) ) {
 	stop("Le rang fourni ne peut être que A ou B (non sensible à la casse)")}
 
-    if( any(!(data$hdr %in% c("oui", "non", "équivalent"))) ) {
+    if( any(!(data$hdr %in% c("oui", "non", "equivalent"))) ) {
 	stop("Le hdr fourni ne peut être que Oui, Non ou Équivalent (non sensible à la casse)")}
 
-    if( any(!(data$local %in% c("local", "extérieur"))) ) {
-	stop("La localité fournie ne peut être que Local ou Extérieur (non sensible à la casse)")}
+    if( any(!(data$local %in% c("local", "exterieur"))) ) {
+	stop("La localité fournie ne peut être que Local ou Exterieur (non sensible à la casse)")}
 
     if( any(!(data$role %in% c("rapporteur", "examinateur", "directeur", "encadrant"))) ) {
 	stop("Le role fourni ne peut être que Rapporteur, Directeur, Encadrant ou Examinateur 
@@ -62,8 +66,8 @@ jury_validity <- function(data){
 #' @param data un data.frame ou une matrice contenant les variables civilité, rang,
 #' local, hdr, role 
 #'
-#' @details le contenu des variables civilité, rang, local, hdr et role est
-#' insensible à la casse. Cependant, les valeurs que peuvent prendre ces
+#' @details le contenu des variables civilite, rang, local, hdr et role est
+#' insensible à la casse ou aux accent. Cependant, les valeurs que peuvent prendre ces
 #' variables sont strictement contraintes. La variable civilité ne peut prendre que
 #' la valeur Mr ou Mme; la variable rang ne peut prendre que les valeurs A ou B
 #' désignant respectivement directeur.es de recherche/professeur.es ou chargé.es
@@ -94,7 +98,8 @@ jury_check <- function(data, binary = FALSE, gender_biais = FALSE){
   #TODO: check that jury check all works well  
 result <- with(custom_function, {
     ## Nombre de rapporteur, d'examinateur et directeur de thèse 
-    res <- c(check_nb_row(data, mystop),
+    res <- c(
+      check_nb_row(data, mystop),
       check_nb_reviewer(data, mystop),
       check_nb_exam(data, mystop),
       check_rank(data, mystop),

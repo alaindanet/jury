@@ -4,7 +4,7 @@
 \alias{jury_check}
 \title{Vérifier la validité de la composition de son jury de thèse.}
 \usage{
-jury_check(data, binary = FALSE)
+jury_check(data, binary = FALSE, gender_biais = FALSE)
 }
 \arguments{
 \item{data}{un data.frame ou une matrice contenant les variables civilité, rang,
@@ -18,8 +18,8 @@ composition du jury de thèse n'est pas valide.
 Vérifier la validité de la composition de son jury de thèse.
 }
 \details{
-le contenu des variables civilité, rang, local, hdr et role est
-insensible à la casse. Cependant, les valeurs que peuvent prendre ces
+le contenu des variables civilite, rang, local, hdr et role est
+insensible à la casse ou aux accent. Cependant, les valeurs que peuvent prendre ces
 variables sont strictement contraintes. La variable civilité ne peut prendre que
 la valeur Mr ou Mme; la variable rang ne peut prendre que les valeurs A ou B
 désignant respectivement directeur.es de recherche/professeur.es ou chargé.es

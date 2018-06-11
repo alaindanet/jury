@@ -43,3 +43,4 @@ any(test == FALSE)
 ##########################
 
 devtools::use_vignette("set_jury_composition")
+

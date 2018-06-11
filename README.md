@@ -22,6 +22,28 @@ install_github("alaindanet/jury", build_vignettes=TRUE)
 browseVignettes("jury")
 ```
 
+## Format de données d'entrée
+
+Les fonctions de `jury` sont insensibles à la casse et aux accents, donc vous
+pouvez écrire avec des accents ou non.
+
+```r
+civilité <- c("Mme", "Mme", "M", "M", "Mme", "M")
+rang <- c("A", "A", "B", "B", "A", "B")
+hdr <- c("Oui", "Oui", "Équivalent", "Non", "Oui", "Non")
+local <- c("Extérieur", "Local", "Extérieur", "Extérieur", "Local", "Local")
+role <- c("Rapporteur", "Examinateur", "Rapporteur", "Examinateur", "Directeur", "Encadrant")
+
+jury <- tibble::as_tibble(cbind(civilité, rang, hdr, local, role))
+```
+
+Ce sont les seules variables dont `jury` a besoin. Cependant, il est recommandé d'ajouter le nom (ou prénoms, surnoms, ...) des membres du jury pour s'y retrouver,   
+
+```r
+prénoms <- c("Laure", "Artémis", "Akim", "Pierre", "Yasmine", "Malo")
+jury <- cbind(jury, prénoms) 
+```
+
 
 ## Vérifier la composition de son jury de thèse
 
@@ -54,3 +76,10 @@ afficher avec l'argument `n`.
 ```r
 print(valid_jury, n = 3)
 ```
+
+## TODO
+
+- [x] Autoriser l'écriture sans accent!
+- [ ] Autoriser la spécification des invités (n <= 2)
+- [x] Autoriser une longueur de jury supérieur à 6 check_nb_row et jusqu'à 8
+(sans les invités)
